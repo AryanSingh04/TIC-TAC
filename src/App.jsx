@@ -5,7 +5,8 @@ import CreateRoom from './Pages/CreateRoom';
 import JoinRoom from './Pages/JoinRoom';
 import Game from './Pages/Game';
 import Main from './Pages/Main';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
     const socket = useRef(null);
@@ -43,10 +44,27 @@ const App = () => {
                 console.log("You joined the room.",player);
                 setPlaye(player)
             });
+            socket.current.on('roomNotFound', () => {
+                console.log("Room is Already Full or Doesn't Exist.!");
+                toast.error("Room is Already Full or Doesn't Exist.!",{
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                    bodyClassName: "blue",
+                    transition: Bounce,
+                })
+            
+            });
+
 
             return () => {
                 if (socket.current) {
                     socket.current.off('move-made');
+                    socket.current.off("roomNotFound")
                 }
             };
         }
@@ -91,7 +109,7 @@ const App = () => {
                  
                     <Route path='/game' element={<Game myId={myId} p2={p2} player={playe} socket={socket.current}  roomCode={roomCode}changePlayer={changePlayer}/>}/> 
                 </Routes>
-          
+                <ToastContainer toastClassName={"bg-[rgb(70,70,70)] text-white"} />
         </div>
     );
 };

@@ -212,7 +212,7 @@ const Game = ({ p2, myId, player, socket, roomCode, changePlayer }) => {
                     ))}
                 </div>
             </div>
-            <ToastContainer toastClassName={"bg-[rgb(70,70,70)] text-white"} />
+            {/* <ToastContainer toastClassName={"bg-[rgb(70,70,70)] text-white"} /> */}
         </>
     );
 }
