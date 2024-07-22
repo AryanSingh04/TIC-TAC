@@ -17,10 +17,10 @@ const App = () => {
     useEffect(() => {
         // Initialize socket connection
         if(!socket?.current){
-        socket.current = io("http://localhost:3001");
-
+        socket.current = io("https://tic-back.onrender.com/",{
+        });
         socket.current.on("connect", () => {
-            console.log("My id is: " + socket.current.id);
+            // console.log("My id is: " + socket.current.id);
             setMyId(socket.current.id)
         });}
         // Cleanup function to disconnect socket on unmount
@@ -33,11 +33,9 @@ const App = () => {
         if (socket.current) {
             socket.current.on('user-join', ({ users,opp }) => {
                 const opps=users.find((e)=>e!=socket.current.id)
-                // console.log("Users in room:", users);
-                console.log(opps)
                 setP2(opps)
                 navigte("/game")
-                // Handle the list of users in the room
+                
             });
            
     
@@ -76,7 +74,7 @@ const App = () => {
         }
     };
     const changePlayer=({player})=>{
-        // console.log("change",player)
+     
    setPlaye((prev)=>{
   
    return prev=="X"?"O":"X"

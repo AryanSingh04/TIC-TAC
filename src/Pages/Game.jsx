@@ -39,9 +39,7 @@ const Game = ({ p2, myId, player, socket, roomCode, changePlayer }) => {
                 }
             });
 
-            socket.on("game-finish", ({ player: p }) => {
-                setWinner(p + " has won the Match.!");
-            });
+           
 
             socket.on("user-exit", (id) => {
                 toast(id + " has disconnected", {
@@ -147,10 +145,8 @@ const Game = ({ p2, myId, player, socket, roomCode, changePlayer }) => {
                 if (board[a] && board[a] === board[b] && board[a] === board[c]) {
                     setWinnerBox(lines[i]);
                     setColour(board[a] === "cross" ? "bg-red-600 hover:bg-red-900" : "bg-blue-600 hover:bg-blue-900");
-                    setWinner(board[a] === "cross" ? "X" : "O");
-                    if (socket) {
-                        socket.emit("game-finish", { player, roomCode });
-                    }
+                    setWinner((board[a] === "cross" ? "X" : "O")+" has won the Match");
+                   
                     return;
                 }
             }
