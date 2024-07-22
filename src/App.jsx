@@ -101,15 +101,16 @@ const App = () => {
 
     return (
         <div className='w-screen h-screen font-[h]'>
-           
+        
                 <Routes>
-                    <Route path='/' element={<Main />} />
-                    <Route path='/create' element={<CreateRoom onCreate={handleCreateRoom} />} />
-                    <Route path='/join' element={<JoinRoom onJoin={handleJoinRoom} />} />
+                    <Route exact path='/' element={<Main />} />
+                    <Route exact path='/create' element={<CreateRoom onCreate={handleCreateRoom} />} />
+                    <Route exact path='/join' element={<JoinRoom onJoin={handleJoinRoom} />} />
                  
                     <Route path='/game' element={<Game myId={myId} p2={p2} player={playe} socket={socket.current}  roomCode={roomCode}changePlayer={changePlayer}/>}/> 
                 </Routes>
                 <ToastContainer toastClassName={"bg-[rgb(70,70,70)] text-white"} />
+               
         </div>
     );
 };
