@@ -10,7 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
     const socket = useRef(null);
-    const navigte=useNavigate()
+    const navigte=useNavigate();
+    const [loading,setLoading]=useState(false)
     const [roomCode,setRoomCode]=useState("")
     const [p2, setP2] = useState(undefined);
     const [playe,setPlaye]=useState("")
@@ -21,19 +22,17 @@ const App = () => {
         socket.current = io("https://tic-back.onrender.com/",{
         });
         socket.current.on("connect", () => {
-            // console.log("My id is: " + socket.current.id);
+            console.log("My id is: " + socket.current.id);
             setMyId(socket.current.id)
         });}
-        // Cleanup function to disconnect socket on unmount
-        // return () => {
-        //     socket.current.disconnect();
-        // };
+     
     }, []);
 
     useEffect(() => {
         if (socket.current) {
             socket.current.on('user-join', ({ users,opp }) => {
                 const opps=users.find((e)=>e!=socket.current.id)
+                setLoading(false)
                 setP2(opps)
                 navigte("/game")
                 
@@ -45,18 +44,21 @@ const App = () => {
                 setPlaye(player)
             });
             socket.current.on('roomNotFound', () => {
-                console.log("Room is Already Full or Doesn't Exist.!");
-                toast.error("Room is Already Full or Doesn't Exist.!",{
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    theme: "light",
-                    bodyClassName: "blue",
-                    transition: Bounce,
-                })
+                setLoading(false)
+                setTimeout(()=>{
+                    toast.error("Room is Already Full or Doesn't Exist.!",{
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "light",
+                        bodyClassName: "blue",
+                        transition: Bounce,
+                    })
+                },[1000])
+                
             
             });
 
@@ -75,6 +77,17 @@ const App = () => {
         if (socket.current) {
             socket.current.emit("create-room",{ roomCode, userId:socket.current.id});
             setRoomCode(roomCode)
+            toast.success("Room is Created.!",{
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "light",
+                bodyClassName: "blue",
+                transition: Bounce,
+            })
         }else{
             alert("no")
         }
@@ -83,6 +96,7 @@ const App = () => {
     const handleJoinRoom = (roomCode) => {
         if (socket.current) {
             console.log(socket.current.id)
+            setLoading(true)
           console.log("process start join")
             socket.current.emit("join-room", {roomCode, userId:socket.current.id});
             setRoomCode(roomCode)
@@ -98,6 +112,21 @@ const App = () => {
    return prev=="X"?"O":"X"
    })
     }
+
+ if(loading){
+    return (
+        <div className='w-screen h-screen flex items-center justify-center'>
+        <div className="loader">
+        <div className="loader__bar"></div>
+        <div className="loader__bar"></div>
+        <div className="loader__bar"></div>
+        <div className="loader__bar"></div>
+        <div className="loader__bar"></div>
+        <div className="loader__ball"></div>
+      </div>
+        </div>
+    )
+ }
 
     return (
         <div className='w-screen h-screen font-[h]'>
